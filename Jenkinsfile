@@ -1,24 +1,25 @@
-
 pipeline {
     agent any
 
-    tools {
-        jdk 'JDK17'
-        maven 'Maven3'
-    }
-
     stages {
+
+        stage('Check Tools') {
+            steps {
+                sh 'java -version'
+                sh 'mvn -version'
+            }
+        }
 
         stage('Checkout') {
             steps {
-                echo 'Checking out source code...'
+                echo 'Checking out code...'
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building the Spring Boot application...'
+                echo 'Building application...'
                 sh 'mvn clean package -DskipTests'
             }
         }
@@ -30,31 +31,20 @@ pipeline {
             }
         }
 
-        stage('Package') {
+        stage('Done') {
             steps {
-                echo 'Application packaged successfully.'
-                sh 'ls -lh target/'
+                echo 'Build and test completed successfully!'
             }
         }
     }
 
     post {
         success {
-            echo '======================================'
-            echo ' Jenkins Pipeline Completed Successfully'
-            echo '======================================'
+            echo 'Jenkins pipeline completed successfully!'
         }
 
         failure {
-            echo '======================================'
-            echo ' Jenkins Pipeline Failed'
-            echo 'Check the console output for the error.'
-            echo '======================================'
-        }
-
-        always {
-            echo 'Pipeline execution finished.'
+            echo 'Jenkins pipeline failed!'
         }
     }
 }
-
