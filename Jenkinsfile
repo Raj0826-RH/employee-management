@@ -3,37 +3,35 @@ pipeline {
 
     stages {
 
-        stage('Check Tools') {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Raj0826-RH/employee-management.git'
+            }
+        }
+
+        stage('Check Java and Maven') {
             steps {
                 sh 'java -version'
                 sh 'mvn -version'
             }
         }
 
-        stage('Checkout') {
-            steps {
-                echo 'Checking out code...'
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
-                echo 'Building application...'
                 sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
                 sh 'mvn test'
             }
         }
 
-        stage('Done') {
+        stage('Success') {
             steps {
-                echo 'Build and test completed successfully!'
+                echo 'BUILD COMPLETED SUCCESSFULLY'
             }
         }
     }
@@ -44,7 +42,7 @@ pipeline {
         }
 
         failure {
-            echo 'Jenkins pipeline failed!'
+            echo 'Jenkins pipeline failed. Check the console output.'
         }
     }
 }
